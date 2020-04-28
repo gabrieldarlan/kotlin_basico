@@ -1,3 +1,5 @@
+import javax.print.attribute.standard.Destination
+
 fun main() {
     println("Bem vindo ao Bytebank")
     val contaAlex = Conta()
@@ -20,15 +22,63 @@ fun main() {
 
     contaAlex.saldo += 50.0
     println("depositando na conta do alex")
-    deposita(contaAlex, 50.0)
+    contaAlex.deposita(50.0)
     println(contaAlex.saldo)
     println("depositando na conta da fran")
-    deposita(contaFran, 70.0)
+    contaFran.deposita(70.0)
     println(contaFran.saldo)
+
+    println("sacando na conta do alex")
+    contaAlex.saca(250.0)
+    println(contaAlex.saldo)
+
+    println("sacando na conta da fran")
+    contaAlex.saca(100.0)
+    println(contaAlex.saldo)
+
+    println("saque em excesso alex")
+    contaAlex.saca(100.0)
+    println(contaAlex.saldo)
+
+    println("saque em excesso fran")
+    contaAlex.saca(500.0)
+    println(contaAlex.saldo)
+
+    println("transferencia da conta da fran pra o alex")
+    if(contaFran.transfere(1150.0, contaAlex)){
+        println("deu certo")
+    }else{
+        println("nao deu")
+    }
+    println("saldo alex: ${contaAlex.saldo}")
+    println("saldo fran: ${contaFran.saldo}")
+
 }
 
-fun deposita(conta: Conta, valor: Double) {
-    conta.saldo += valor
+class Conta {
+    var titular = ""
+    var numero = 0
+    var saldo = 0.0
+
+    fun deposita(valor: Double) {
+        this.saldo += valor
+    }
+
+    fun saca(valor: Double) {
+        if (saldo >= valor) {
+            saldo -= valor
+        }
+    }
+
+    fun transfere(valor: Double, destino: Conta): Boolean {
+        return if (saldo >= valor) {
+            saldo -= valor
+            destino.saldo += valor
+            true
+        } else {
+            false
+        }
+    }
 }
 
 private fun testaCopiasEReferencias() {
@@ -46,14 +96,6 @@ private fun testaCopiasEReferencias() {
 
     println("titular conta joao: ${contaJoao.titular} ")
     println("titular conta maria: ${contaMaria.titular} ")
-}
-
-
-class Conta {
-    var titular = ""
-    var numero = 0
-    var saldo = 0.0
-
 }
 
 private fun testaLacos() {
